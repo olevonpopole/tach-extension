@@ -2268,28 +2268,6 @@ class Kavita(private val suffix: String = "") : ConfigurableSource, UnmeteredSou
 
         screen.addPreference(allowedLibrariesFeedPref)
         screen.addPreference(allowedLibrariesSearchPref)
-
-        SwitchPreferenceCompat(screen.context).apply {
-            key = "reset_preferences"
-            title = intl["pref_reset_title"]
-            summary = intl["pref_reset_summary"]
-            setOnPreferenceClickListener {
-                AlertDialog.Builder(screen.context)
-                    .setTitle(intl["dialog_reset_title"])
-                    .setMessage(intl["dialog_reset_message"])
-                    .setPositiveButton(intl["dialog_reset_positive"]) { _, _ ->
-                        resetAllPreferences()
-                        Toast.makeText(
-                            screen.context,
-                            intl["toast_settings_reset"],
-                            Toast.LENGTH_LONG,
-                        ).show()
-                    }
-                    .setNegativeButton(intl["dialog_reset_negative"], null)
-                    .show()
-                true
-            }
-        }.also(screen::addPreference)
     }
 
     private fun PreferenceScreen.editTextPreference(
