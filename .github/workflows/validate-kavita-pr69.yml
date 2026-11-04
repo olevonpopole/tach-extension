@@ -1,0 +1,31 @@
+name: Validate Kavita PR 69
+on:
+  push:
+    branches:
+      - ci/validate-kavita-pr69
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ccdc8687d6f804b299c93611d258a02b84f2f5d2
+      - uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00
+        with:
+          java-version: 17
+          distribution: temurin
+      - uses: gradle/actions/setup-gradle@06832c7b30a0129d7fb559bcc6e43d26f6374244
+      - name: Lint, build APK, and run Kavita JVM tests
+        run: ./gradlew :src:all:kavita:lintKotlin :src:all:kavita:assembleDebug :src:all:kavita:testDebugUnitTest --no-daemon --console=plain
+      - name: Upload test reports and APK
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kavita-pr69-validation
+          path: |
+            src/all/kavita/build/reports/
+            src/all/kavita/build/outputs/apk/debug/
